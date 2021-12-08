@@ -12,9 +12,13 @@ struct ShakeEmCrapsApp: App {
     @StateObject var viewChanger = ViewChanger()
     @StateObject var bet = IntOO()
     @StateObject var cash = IntOO2()
+    @StateObject var pass = BoolOO()
+    @StateObject var pointTotal = IntOO()
+    @StateObject var shooterWins = BoolOO()
+    @StateObject var winnings = IntOO()
     var body: some Scene {
         WindowGroup {
-            BossView(viewChanger: viewChanger, bet: bet, cash: cash)
+            BossView(viewChanger: viewChanger, bet: bet, cash: cash, pass: pass, pointTotal: pointTotal, shooterWins: shooterWins, winnings: winnings)
         }
     }
 }
@@ -23,6 +27,8 @@ enum Page {
     case p1
     case p2
     case p3
+    case p4
+    case p5
 }
 
 enum EntryError: Error {
@@ -40,4 +46,8 @@ class IntOO: ObservableObject {
 
 class IntOO2: ObservableObject {
     @Published var num: Int = 100
+}
+
+class BoolOO: ObservableObject {
+    @Published var boo: Bool = false
 }
