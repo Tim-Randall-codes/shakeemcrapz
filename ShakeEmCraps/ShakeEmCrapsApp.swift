@@ -29,6 +29,7 @@ enum Page {
     case p3
     case p4
     case p5
+    case p6
 }
 
 enum EntryError: Error {
@@ -51,3 +52,4 @@ class IntOO2: ObservableObject {
 class BoolOO: ObservableObject {
     @Published var boo: Bool = false
 }
+

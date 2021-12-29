@@ -26,13 +26,16 @@ struct BossView: View {
             GameView1(viewChanger: viewChanger, bet: bet, cash: cash, pass: pass)
         }
         else if viewChanger.page == .p3 {
-            GameView2(viewChanger: viewChanger, bet: bet, cash: cash, pass: pass, pointTotal: pointTotal, shooterWins: shooterWins)
+            GameView2(viewChanger: viewChanger, bet: bet, cash: cash, pass: pass, pointTotal: pointTotal, shooterWins: shooterWins, winnings: winnings)
         }
         else if viewChanger.page == .p4 {
             GameView3(viewChanger: viewChanger, bet: bet, cash: cash, pass: pass, pointTotal: pointTotal, shooterWins: shooterWins, winnings: winnings)
         }
         else if viewChanger.page == .p5 {
             ResultView(viewChanger: viewChanger, bet: bet, cash: cash, pass: pass, shooterWins: shooterWins, winnings: winnings)
+        }
+        else if viewChanger.page == .p6 {
+            GameOverView(viewChanger: viewChanger, cash: cash)
         }
     }
 }
@@ -121,6 +124,7 @@ struct GameView2: View {
     @StateObject var pass: BoolOO
     @StateObject var pointTotal: IntOO
     @StateObject var shooterWins: BoolOO
+    @StateObject var winnings: IntOO
     @State var dice1: Int = Int.random(in: 1...6)
     @State var dice2: Int = Int.random(in: 1...6)
     @State var displayMessage: String = ""
@@ -129,11 +133,13 @@ struct GameView2: View {
             Background()
             VStack{
                 Title(words: "Shake'Em Crapz!")
-                TextWidget(words: "You have $\(cash.num). You bet $\(bet.num), \(dice1) \(dice2)")
+                TextWidget(words: "You have $\(cash.num). You bet $\(bet.num).")
+                ImageView(diceOneNum: dice1, diceTwoNum: dice2)
                 if dice1 + dice2 == 2 || dice1 + dice2 == 3 || dice1 + dice2 == 12 {
                     TextWidget(words: "Score is \(dice1 + dice2), shooter loses!")
                     Button(action:{
                         shooterWins.boo = false
+                        winnings.num = cash.num - bet.num
                         viewChanger.page = .p5
                     }, label:{
                         ButtonWidget(words: "Continue")
@@ -143,6 +149,7 @@ struct GameView2: View {
                     TextWidget(words: "Score is \(dice1 + dice2), shooter wins!")
                     Button(action:{
                         shooterWins.boo = true
+                        winnings.num = cash.num + bet.num
                         viewChanger.page = .p5
                     }, label:{
                         ButtonWidget(words: "Continue")
@@ -177,7 +184,8 @@ struct GameView3: View {
             Background()
             VStack{
                 Title(words: "Shake'Em Crapz!")
-                TextWidget(words: "You have $\(cash.num). You bet $\(bet.num). The total the shooter needs to win is \(pointTotal.num). \(dice1) \(dice2)")
+                TextWidget(words: "You have $\(cash.num). You bet $\(bet.num). The total the shooter needs to win is \(pointTotal.num).")
+                ImageView(diceOneNum: dice1, diceTwoNum: dice2)
                 if dice1 + dice2 == 7 {
                     TextWidget(words: "Seven was rolled: shooter loses!")
                     Button(action:{
@@ -255,10 +263,37 @@ struct ResultView: View {
                 TextWidget(words: "You have $\(cash.num). You bet $\(bet.num). So now you have \(winnings.num).")
                 Button(action:{
                     cash.num = winnings.num
-                    viewChanger.page = .p1
+                    if cash.num > 0 {
+                        viewChanger.page = .p1
+                    }
+                    else {
+                        viewChanger.page = .p6
+                    }
                 }, label:{
                     ButtonWidget(words: "Continue")
                 })
+            }
+        }
+    }
+}
+
+struct GameOverView: View {
+    @StateObject var viewChanger: ViewChanger
+    @StateObject var cash: IntOO2
+    var body: some View {
+        ZStack{
+            Background()
+            VStack{
+                Spacer()
+                Title(words: "Game Over")
+                TextWidget(words: "Sorry my man, game over you ran out of money.")
+                Button(action:{
+                    cash.num = 100
+                    viewChanger.page = .p1
+                }, label:{
+                    ButtonWidget(words: "Start Again")
+                })
+                Spacer()
             }
         }
     }
@@ -296,6 +331,63 @@ struct Title: View {
         Text(words).padding()
             .foregroundColor(Color.white)
             .font(.system(size: 22, weight: .bold))
+    }
+}
+
+struct ImageView: View {
+    var diceOneNum: Int
+    var diceTwoNum: Int
+    var body: some View{
+        HStack{
+            if diceOneNum == 1 {
+                Image("Alea_1").resizable()
+                    .frame(width: 50, height: 50)
+            }
+            else if diceOneNum == 2 {
+                Image("Alea_2").resizable()
+                    .frame(width: 50, height: 50)
+            }
+            else if diceOneNum == 3 {
+                Image("Alea_3").resizable()
+                    .frame(width: 50, height: 50)
+            }
+            else if diceOneNum == 4 {
+                Image("Alea_4").resizable()
+                    .frame(width: 50, height: 50)
+            }
+            else if diceOneNum == 5 {
+                Image("Alea_5").resizable()
+                    .frame(width: 50, height: 50)
+            }
+            else if diceOneNum == 6 {
+                Image("Alea_6").resizable()
+                    .frame(width: 50, height: 50)
+            }
+            if diceTwoNum == 1 {
+                Image("Alea_1").resizable()
+                    .frame(width: 50, height: 50)
+            }
+            else if diceTwoNum == 2 {
+                Image("Alea_2").resizable()
+                    .frame(width: 50, height: 50)
+            }
+            else if diceTwoNum == 3 {
+                Image("Alea_3").resizable()
+                    .frame(width: 50, height: 50)
+            }
+            else if diceTwoNum == 4 {
+                Image("Alea_4").resizable()
+                    .frame(width: 50, height: 50)
+            }
+            else if diceTwoNum == 5 {
+                Image("Alea_5").resizable()
+                    .frame(width: 50, height: 50)
+            }
+            else if diceTwoNum == 6 {
+                Image("Alea_6").resizable()
+                    .frame(width: 50, height: 50)
+            }
+        }
     }
 }
 
