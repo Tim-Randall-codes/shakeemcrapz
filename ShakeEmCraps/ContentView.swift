@@ -7,6 +7,9 @@
 
 import SwiftUI
 
+// put in dice graphics
+// put in page for game over when money is zero and game over for when money is too high
+
 struct BossView: View {
     @StateObject var viewChanger: ViewChanger
     @StateObject var bet: IntOO
